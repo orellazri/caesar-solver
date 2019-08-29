@@ -1,9 +1,21 @@
 from nltk.corpus import words
+import time
 
 letters = list("abcdefghijklmnopqrstuvwxyz")
 to_decrypt = input("Enter a string to decrypt: ").lower()
 
-def decrypt(word, shift):
+
+start_time = time.time()
+processes = []
+
+# Variables to keep track of the result - the most likely decrypted string
+most_likely_num = 0
+most_likely = to_decrypt
+most_likely_string = ""
+shifted = 0
+
+# Decrypt a word inside the string
+def decrypt_word(word, shift):
     decrypted = ""
 
     for letter in word:
@@ -22,17 +34,14 @@ def decrypt(word, shift):
 
     return decrypted
 
-# Variables to keep track of the result - the most likely decrypted string
-most_likely_num = 0
-most_likely = to_decrypt
-most_likely_string = ""
-shifted = 0
+# Decrypt the string
+def decrypt_string(string, shift):
+    global most_likely_num
+    global most_likely
+    global shifted
 
-# Loop through all the possible shift according to the size of the
-# letters array
-for i in range(1, len(letters)):
     likely = 0
-    decrypted = decrypt(to_decrypt, i).split(" ")
+    decrypted = decrypt_word(to_decrypt, shift).split(" ")
 
     # Calculate the likelihood of the words being actual english words
     for word in decrypted:
@@ -46,12 +55,18 @@ for i in range(1, len(letters)):
         most_likely = decrypted
         shifted = i
 
-# Turn the most likely array into a string
-for word in most_likely:
-    most_likely_string = "{} {}".format(most_likely_string, word)
-most_likely_string = most_likely_string.strip()
+if __name__ == "__main__":
+    # Loop through all the possible shift according to the size of the letters array
+    for i in range(1, len(letters)):
+        decrypt_string(to_decrypt, i)
 
-# Print the most likely decrypted string
-print("The decrypted string is most likely:")
-print(most_likely_string)
-print("Shifted {} times".format(shifted))
+    # Turn the most likely array into a string
+    for word in most_likely:
+        most_likely_string = "{} {}".format(most_likely_string, word)
+    most_likely_string = most_likely_string.strip()
+
+    # Print the most likely decrypted string
+    print("The decrypted string is most likely:")
+    print(most_likely_string)
+    print("Shifted {} times".format(shifted))
+    print("The program took {0:.3f} seconds to finish.".format(time.time() - start_time))
