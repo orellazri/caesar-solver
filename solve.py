@@ -28,8 +28,9 @@ most_likely = to_decrypt
 most_likely_string = ""
 shifted = 0
 
-# Loop 26 times for the every alphabetic possibility
-for i in range(1, 26):
+# Loop through all the possible shift according to the size of the
+# letters array
+for i in range(1, len(letters)):
     likely = 0
     decrypted = decrypt(to_decrypt, i).split(" ")
 
